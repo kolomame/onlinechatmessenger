@@ -9,14 +9,16 @@ def remove_client(user_info, usertime):
             if current_time - t >= 10:
                 if address in user_info:
                     del user_info[address]
+                    del usertime[address]
 
-        time.sleep(0.5)
+
 
 
 def sendreceive(sock, user_info, usertime):
     while True:
         print('\nwaiting to receive message')
         header, address = sock.recvfrom(8)
+        print(f'address: {address}')
 
 
         name_length = int.from_bytes(header[:1], "big")

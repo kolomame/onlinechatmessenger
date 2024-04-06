@@ -18,7 +18,6 @@ def send_message(sock, server_address, server_port, name):
         sock.sendto(header, (server_address, server_port))
         sock.sendto(name_bits, (server_address, server_port))
         sock.sendto(message_bits, (server_address, server_port))
-        time.sleep(0.5)
 
 def receive_message(sock):
     while True:
@@ -29,7 +28,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 
 
-server_address = input("Type in the server's address to connect to: ")
+
 server_port = 9001
 address = ''
 port = 9051
@@ -39,7 +38,7 @@ sock.bind((address,port))
 name = input("My name is: ")
 
 
-send_thread = threading.Thread(target=send_message, args=(sock, server_address, server_port, name))
+send_thread = threading.Thread(target=send_message, args=(sock, address, server_port, name))
 receive_thread = threading.Thread(target=receive_message, args=(sock,))
 
 
