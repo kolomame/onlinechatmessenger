@@ -14,10 +14,10 @@ def send_message(sock, server_address, server_port, name):
         name_bits = name.encode('utf-8')
         message_bits = sendmessage.encode('utf-8')
         header = protocol_header(len(name_bits), len(message_bits))
+        data = name_bits + message_bits
 
         sock.sendto(header, (server_address, server_port))
-        sock.sendto(name_bits, (server_address, server_port))
-        sock.sendto(message_bits, (server_address, server_port))
+        sock.sendto(data, (server_address, server_port))
 
 
 def receive_message(sock):

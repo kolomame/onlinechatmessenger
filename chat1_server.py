@@ -5,11 +5,16 @@ import threading
 def remove_client(user_info, usertime):
     while True:
         current_time = time.time()
+        remove_user_list = []
         for address, t in usertime.items():
             if current_time - t >= 10:
                 if address in user_info:
-                    del user_info[address]
-                    del usertime[address]
+                    remove_user_list.append(address)
+
+        
+        for address in remove_user_list:
+            del user_info[address]
+            del usertime[address] 
 
 
 
@@ -22,20 +27,27 @@ def sendreceive(sock, user_info, usertime):
 
 
         name_length = int.from_bytes(header[:1], "big")
-        data_length = int.from_bytes(header[1:], "big")
+        message_length = int.from_bytes(header[1:], "big")
 
-        username_bits, address = sock.recvfrom(name_length)
+        data, address = sock.recvfrom(1024)
+
+        username_bits = data[:name_length]
+        message_bits = data[name_length: name_length+message_length]
+
+
+
 
         username = username_bits.decode('utf-8')
+        #addressとnameを結びつける
         user_info[address] = username
         usertime[address] = time.time()
-        data_bits, address = sock.recvfrom(data_length)
-        data = data_bits.decode('utf-8')
-        print(f"name: {username}, data: {data}")
+
+        message = message_bits.decode('utf-8')
+        print(f"name: {username}, data: {data.decode('utf-8')}, message: {message}")
 
         for key in user_info:
             if key == address: continue
-            sock.sendto((f"{username}: {data}").encode('utf-8'), key)
+            sock.sendto((f"{username}: {message}").encode('utf-8'), key)
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
