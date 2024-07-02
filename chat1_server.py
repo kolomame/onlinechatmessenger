@@ -40,6 +40,7 @@ def sendreceive(sock, user_info, usertime):
         username = username_bits.decode('utf-8')
         #addressとnameを結びつける
         user_info[address] = username
+        
         usertime[address] = time.time()
 
         message = message_bits.decode('utf-8')
