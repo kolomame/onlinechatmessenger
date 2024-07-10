@@ -1,6 +1,5 @@
 import socket
 import threading
-import time
 
 def protocol_header(usernamelen, data_length):
     return usernamelen.to_bytes(1, "big") + data_length.to_bytes(4, "big")
