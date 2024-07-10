@@ -51,3 +51,4 @@ receive_thread.start()
 
 send_thread.join()
 receive_thread.join()
+sock.close()
