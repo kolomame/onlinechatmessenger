@@ -2,19 +2,21 @@ import socket
 import time
 import threading
 
-# def remove_client(user_info, usertime):
-#     while True:
-#         current_time = time.time()
-#         remove_user_list = []
-#         for address, t in usertime.items():
-#             if current_time - t >= 10:
-#                 if address in user_info:
-#                     remove_user_list.append(address)
+def remove_client(user_info, usertime):
+    while True:
+        current_time = time.time()
+        remove_user_list = []
+        for address, t in usertime.items():
+            if current_time - t >= 10:
+                if address in user_info:
+                    remove_user_list.append(address)
 
         
-#         for address in remove_user_list:
-#             del user_info[address]
-#             del usertime[address] 
+        for address in remove_user_list:
+            sock.sendto("close".encode('utf-8'), address)
+            del user_info[address]
+            del usertime[address] 
+            print('close')
 
 
 
@@ -62,10 +64,10 @@ user_info = {} #user_info[address] = username
 usertime = {} #usertime[address] = time.time()
 
 send_thread = threading.Thread(target=sendreceive, args=(sock, user_info, usertime))
-# remove_thread = threading.Thread(target=remove_client, args=(user_info, usertime))
+remove_thread = threading.Thread(target=remove_client, args=(user_info, usertime))
 
 send_thread.start()
-# remove_thread.start()
+remove_thread.start()
 
 send_thread.join()
-# remove_thread.join()
+remove_thread.join()

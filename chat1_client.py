@@ -1,6 +1,8 @@
 import socket
 import threading
 
+
+
 def protocol_header(usernamelen, data_length):
     return usernamelen.to_bytes(1, "big") + data_length.to_bytes(4, "big")
 
@@ -19,10 +21,15 @@ def send_message(sock, server_address, server_port, name):
         sock.sendto(data, (server_address, server_port))
 
 
+
 def receive_message(sock):
     try:
         while True:
             receive = sock.recvfrom(1024)[0].decode('utf-8')
+            if receive == 'close':
+                print('close')
+                sock.close()
+                break
             print(receive)
 
 
@@ -51,4 +58,3 @@ receive_thread.start()
 
 send_thread.join()
 receive_thread.join()
-sock.close()

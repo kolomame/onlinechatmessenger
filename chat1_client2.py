@@ -20,9 +20,18 @@ def send_message(sock, server_address, server_port, name):
 
 
 def receive_message(sock):
-    while True:
-        receive = sock.recvfrom(1024)[0].decode('utf-8')
-        print(receive)
+    try:
+        while True:
+            receive = sock.recvfrom(1024)[0].decode('utf-8')
+            if receive == 'close':
+                print('close')
+                sock.close()
+                break
+            print(receive)
+
+
+    except Exception as e:
+        print("Error in receive_message:", e)
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -47,4 +56,3 @@ receive_thread.start()
 
 send_thread.join()
 receive_thread.join()
-sock.close()
